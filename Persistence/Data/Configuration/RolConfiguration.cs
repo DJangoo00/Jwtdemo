@@ -11,8 +11,10 @@ public class RolConfiguration : IEntityTypeConfiguration<Rol>
         // Aquí puedes configurar las propiedades de la entidad Marca
         // utilizando el objeto 'builder'.
         builder.ToTable("rol");
+        
         builder.Property(p => p.Id)
                 .IsRequired();
+        
         builder.Property(p => p.Nombre)
         .HasColumnName("rolName")
         .HasColumnType("varchar")

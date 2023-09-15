@@ -10,6 +10,6 @@ public class RolRepository : GenericRepository<Rol>, IRolRepository
 
     public RolRepository(JwtAppContext context) : base(context)
     {
-       _context = context;
+        _context = context;
     }
 }

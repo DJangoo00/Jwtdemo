@@ -1,3 +1,4 @@
+using System.Reflection;
 using ApiJwt.Extension;
 using ApiJwt.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,15 @@ var logger = new LoggerConfiguration()
 
 //builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
-// Add services to the container.
 
+// Add services to the container.
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.ConfigureCors();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.AddAplicacionServices();
 builder.Services.AddJwt(builder.Configuration);
 
@@ -45,6 +47,7 @@ using (var scope = app.Services.CreateScope())
 	{
 		var context = services.GetRequiredService<JwtAppContext>();
 		await context.Database.MigrateAsync();
+		await JwtAppContextSeed.SeedAsync(context,loggerFactory);
 	}
 	catch (Exception ex)
 	{
@@ -53,12 +56,8 @@ using (var scope = app.Services.CreateScope())
 	}
 }
 app.UseCors("CorsPolicy");
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
